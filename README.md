@@ -13,7 +13,7 @@ sudo mkdir /opt/bin
 cd /opt/bin
 sudo wget https://raw.githubusercontent.com/codeenigma/ssh-getkey-ldap/master/ssh-getkey-ldap
 sudo chown root:root /opt/bin/ssh-getkey-ldap
-sudo chmod 0755 /opt/bin/ssh-getkey-ldap
+sudo chmod 0555 /opt/bin/ssh-getkey-ldap
 ```
 
 ## Configuration
