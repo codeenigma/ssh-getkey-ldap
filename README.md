@@ -2,7 +2,7 @@
 This project provides a simple POSIX script to be used as AuthorizedKeysCommand for OpenSSH, 
 using ldapsearch.
 
-*Originally forked from https://gist.github.com/jirutka/b15c31b2739a4f3eab63
+*Originally forked from https://gist.github.com/jirutka/b15c31b2739a4f3eab63*
 
 ## Requirements
 - `ldapsearch`
