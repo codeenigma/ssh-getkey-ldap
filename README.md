@@ -27,4 +27,4 @@ AuthorizedKeysCommand /opt/bin/ssh-getkey-ldap
 AuthorizedKeysCommandUser nobody
 ```
 ### LDAP
-Your server must be configured to return the key in the `sshPublicKey` attribute.
+Your server must be configured to return the key(s) in the `sshPublicKey` attribute.
