@@ -19,7 +19,7 @@ sudo chmod 0555 /opt/bin/ssh-getkey-ldap
 ```
 
 ## Configuration
-There is no specific configuration for the script, it uses the defaults from ldapsearch (/etc/ldap/ldap.conf or /etc/ldap.conf depending on distributions).
+There is no specific configuration for the script, it uses the defaults from ldapsearch (/etc/nslcd.conf, /etc/ldap/ldap.conf or /etc/ldap.conf depending on distributions/setup).
 ### OpenSSH
 Edit `/etc/ssh/sshd_config` and ensure the following lines are present.
 ```
