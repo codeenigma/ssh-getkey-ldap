@@ -7,9 +7,26 @@
 # adds base64 support.
 set -eu
 
+usage(){
+  echo 'ssh-getkey-ldap [OPTIONS]'
+  echo 'This script finds and prints authorized SSH public keys in LDAP for the username specified as the first argument.'
+  echo ''
+  echo 'Mandatory arguments:'
+  echo '  an LDAP username to search.'
+  echo ''
+  echo 'Additional arguments:'
+  echo '  the bind DN to bind to LDAP with.'
+  echo '  the path to a file containing the bind password, if required.'
+}
+
 log() {
 	logger -s -t sshd -p "auth.$1" "$2"
 }
+
+if [ $# -eq 0 ]; then
+	usage
+	exit 1
+fi
 
 uid="$1"
 KEYSFILE=$(mktemp)
@@ -17,14 +34,24 @@ if ! expr "$uid" : '[a-zA-Z0-9._-]*$' 1>/dev/null; then
 	log err "bad characters in username: $uid"
 	exit 2
 fi
-ldapKeys=$(ldapsearch -x -LLL -o ldif-wrap=no "(&(uid=$uid)(sshPublicKey=*))" \
-	'sshPublicKey' | sed -n 's/^sshPublicKey:\s*\(.*\)$/\1/p')
+
+if [ -z ${2+x} ]; then
+	ldapKeys=$(ldapsearch -x -LLL -o ldif-wrap=no "(&(uid=$uid)(sshPublicKey=*))" \
+		'sshPublicKey' | sed -n 's/^sshPublicKey:\s*\(.*\)$/\1/p')
+elif [ -z ${3+x} ]; then
+	ldapKeys=$(ldapsearch -x -LLL -D $2 -o ldif-wrap=no "(&(uid=$uid)(sshPublicKey=*))" \
+		'sshPublicKey' | sed -n 's/^sshPublicKey:\s*\(.*\)$/\1/p')
+else
+	ldapKeys=$(ldapsearch -x -LLL -D $2 -y $3 -o ldif-wrap=no "(&(uid=$uid)(sshPublicKey=*))" \
+		'sshPublicKey' | sed -n 's/^sshPublicKey:\s*\(.*\)$/\1/p')
+fi
+
 printf '%s\n' "$ldapKeys" |
 while read -r key; do
-  case $key in 
+	case $key in
 		': '*)
 			key=$(echo "$key" | cut -d ' ' -f2 | base64 -d)
-	 	;;
+		;;
 	esac
 	printf '%s\n' "$key" >> "$KEYSFILE"
 done

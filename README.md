@@ -9,7 +9,8 @@ using ldapsearch.
 - `base64`
 
 ## Installation
-Simply grab the script, and ensure it is executable and own by the "root" user.
+Simply grab the script, and ensure it is executable and owned by the "root" user.
+
 ```
 sudo mkdir /opt/bin
 cd /opt/bin
@@ -20,11 +21,19 @@ sudo chmod 0555 /opt/bin/ssh-getkey-ldap
 
 ## Configuration
 There is no specific configuration for the script, it uses the defaults from ldapsearch (/etc/nslcd.conf, /etc/ldap/ldap.conf or /etc/ldap.conf depending on distributions/setup).
+
 ### OpenSSH
 Edit `/etc/ssh/sshd_config` and ensure the following lines are present.
+
 ```
 AuthorizedKeysCommand /opt/bin/ssh-getkey-ldap
 AuthorizedKeysCommandUser nobody
 ```
+
 ### LDAP
 Your server must be configured to return the key(s) in the `sshPublicKey` attribute.
+
+### Bind DN
+If you use a bind DN with ldapsearch you need to pass this as the second argument. BINDDN is a user only option, it cannot be set in a config file.
+
+If your bind DN requires a password you need to pass the path to a valid passwd file containing that password as the third argument.
